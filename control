@@ -1,10 +1,10 @@
-Package: dev.traurige.eneko
-Name: Eneko
-Depends: firmware (>= 14.0), mobilesubstrate, preferenceloader, com.mrgcgamer.libgcuniversal
-Conflicts: love.litten.eneko
-Version: 1.4
+Package: com.axs.combinedtweak
+Name: CombinedTweak
+Version: 1.0
 Architecture: iphoneos-arm
-Description: Live wallpapers for iOS
-Maintainer: Traurige <hello@traurige.dev>
-Author: Traurige <hello@traurige.dev>
+Description: CombinedTweak - Dynamic Wallpapers & Gravity Effects
+Maintainer: CombinedTweak
+Author: Traurige & Axs Studio
 Section: Tweaks
+Depends: mobilesubstrate (>= 0.9.5000), preferenceloader, com.axs.libgcuniversal
+Icon: file:///Applications/Cydia.app/Sections/tweak.png

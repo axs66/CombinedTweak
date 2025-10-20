@@ -1,15 +1,20 @@
-export ARCHS = arm64 arm64e
-export SYSROOT = $(THEOS)/sdks/iPhoneOS14.5.sdk
-
-ifneq ($(THEOS_PACKAGE_SCHEME), rootless)
-export TARGET = iphone:clang:latest:14.5
-export PREFIX = $(THEOS)/toolchain/Xcode.xctoolchain/usr/bin/
-else
-export TARGET = iphone:clang:latest:14.5
-endif
-
+ARCHS = arm64 arm64e
+TARGET = iphone:clang:14.5:13.0
 INSTALL_TARGET_PROCESSES = SpringBoard
-SUBPROJECTS = Tweak Preferences
 
 include $(THEOS)/makefiles/common.mk
+
+TWEAK_NAME = CombinedTweak
+
+CombinedTweak_FILES = Tweak/EnekoTweak.m Tweak/GravitationTweak.m
+CombinedTweak_CFLAGS = -fobjc-arc -Wno-deprecated-declarations
+CombinedTweak_FRAMEWORKS = UIKit Foundation AVFoundation CoreMotion QuartzCore
+CombinedTweak_PRIVATE_FRAMEWORKS = Preferences
+CombinedTweak_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
+
+include $(THEOS)/makefiles/tweak.mk
+
+# Preferences Bundle
+SUBPROJECTS += preferences
+
 include $(THEOS_MAKE_PATH)/aggregate.mk

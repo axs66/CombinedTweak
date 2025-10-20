@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+
+		<!-- Header 动态标题 -->
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string></string>
+			<key>isStaticText</key>
+			<true/>
+			<key>label</key>
+			<string></string>
+		</dict>
+
+		<!-- 作者信息 -->
+		<dict>
+			<key>cellClass</key>
+			<string>KRTwitterCell</string>
+			<key>label</key>
+			<string>Axs</string>
+			<key>twitterUser</key>
+			<string>TrollStore3</string>
+			<key>detail</key>
+			<string>@TrollStore3</string>
+			<key>icon</key>
+			<string>_Axs</string>
+		</dict>
+
+		<!-- 主功能开关 -->
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>label</key>
+			<string>Gravitation Enabled</string>
+			<key>defaults</key>
+			<string>com.axs.gravitationprefs</string>
+			<key>key</key>
+			<string>tweakEnabled</string>
+			<key>default</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.axs.gravitation/Prefs</string>
+		</dict>
+
+		<!-- 手指重力效果开关 -->
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>label</key>
+			<string>Finger Gravity</string>
+			<key>defaults</key>
+			<string>com.axs.gravitationprefs</string>
+			<key>key</key>
+			<string>fingerGravity</string>
+			<key>default</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.axs.gravitation/Prefs</string>
+		</dict>
+
+		<!-- GitHub 源码链接 -->
+		<dict>
+			<key>cellClass</key>
+			<string>GravSourceLinkCell</string>
+			<key>label</key>
+			<string>Sileo越狱源</string>
+			<key>url</key>
+			<string>https://axs66.github.io/repo</string>
+			<key>icon</key>
+			<string>github</string>
+		</dict>
+
+		<!-- 捐赠入口 -->
+		<dict>
+			<key>cellClass</key>
+			<string>GravDonationLinkCell</string>
+			<key>label</key>
+			<string>TG分享频道</string>
+			<key>url</key>
+			<string>https://t.me/wxfx8</string>
+			<key>icon</key>
+			<string>paypal</string>
+		</dict>
+
+		<!-- 版权与版本信息 -->
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>© 2025 Axs Studio Gravitation Preferences v1.0</string>
+		</dict>
+
+	</array>
+</dict>
+</plist>

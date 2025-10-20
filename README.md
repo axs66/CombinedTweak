@@ -1,20 +1,63 @@
-# Eneko
-Live wallpapers for iOS
+# CombinedTweak
 
-## Preview
-<img src="Preview.png" alt="Preview" />
+A combined iOS jailbreak tweak that merges **Eneko** (dynamic wallpapers) and **Gravitation** (gravity effects) into a single, unified package.
+
+## Features
+
+### Eneko - Dynamic Wallpapers
+- Set video wallpapers for lock screen and home screen
+- Volume control for wallpaper audio
+- Smart behavior settings (mute when music plays, disable in low power mode)
+- Wallpaper zoom options
+- Support for various video formats
+
+### Gravitation - Gravity Effects
+- Gravity-based physics for home screen icons
+- Device motion sensing for realistic gravity effects
+- Finger gravity interaction
+- Shake to toggle effects
+- Smooth animations and transitions
 
 ## Installation
-1. Download the latest `deb` from the [releases](https://github.com/Traurige/Eneko/releases)
-2. Install Eneko
+
+1. Download the latest `.deb` package from releases
+2. Install via your preferred package manager (Sileo, Zebra, etc.)
+3. Respring your device
+4. Configure settings in **Settings > CombinedTweak**
+
+## Requirements
+
+- iOS 14.5 or later
+- Jailbroken device
+- libGCUniversal dependency
+
+## Configuration
+
+The tweak provides a unified preferences panel with sections for:
+
+- **Eneko Settings**: Enable/disable dynamic wallpapers, configure lock screen and home screen wallpapers, adjust volume levels
+- **Gravitation Settings**: Enable/disable gravity effects, configure finger gravity interaction
+- **Tools**: Respring and reset preferences options
+- **Links**: Source code and support links
 
 ## Compatibility
-iPhone, iPad and iPod running iOS/iPadOS 14 or later
 
-## Compiling
-  - [Theos](https://theos.dev/) is required to compile the project
-  - Depends on [libGCUniversal](https://github.com/MrGcGamer/LibGcUniversalDocumentation)
-  - You may want to edit the root `Makefile` to use your Theos SDK and toolchain
+- iPhone, iPad, and iPod touch
+- iOS/iPadOS 14.5+
+- Supports both Rootless and traditional jailbreak environments
+
+## Credits
+
+- **Eneko** by Alexandra (@Traurige)
+- **Gravitation** by Axs Studio
+- Combined and maintained by CombinedTweak team
 
 ## License
-[GPLv3](https://github.com/Traurige/Eneko/blob/main/COPYING)
+
+This project combines components from both Eneko (GPLv3) and Gravitation projects. Please refer to individual component licenses for details.
+
+## Support
+
+For issues and feature requests, please visit the respective source repositories:
+- [Eneko Issues](https://github.com/Traurige/Eneko/issues)
+- [Gravitation Issues](https://github.com/AxsStudio/Gravitation/issues)
