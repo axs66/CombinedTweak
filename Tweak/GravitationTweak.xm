@@ -1,11 +1,18 @@
-//
-//  GravitationTweak.m
-//  CombinedTweak - Gravitation Module
-//
-//  Combined from Gravitation by Axs Studio
-//
 
-#import "GravitationTweak.h"
+#include "GravitationTweak.h"
+
+// ======================
+// Modifications summary:
+// 1) Fixed enum comparison (UIEventTypeMotion / UIEventSubtypeMotionShake)
+// 2) Replaced Swift-style `UIRegion.infiniteRegion` with Objective-C `[UIRegion infiniteRegion]`
+// 3) Converted all variable-length arrays (VLA) to malloc/free for C++ safety
+// 4) Suppressed -Wvla-cxx-extension and related warnings
+// 5) Added iOS 14.5+ compatibility guards
+// ======================
+
+#import <UIKit/UIKit.h>
+#import <CoreMotion/CoreMotion.h>
+#import <Foundation/Foundation.h>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wvla-cxx-extension"
@@ -27,15 +34,15 @@
 
 // #pragma Globals
 static BOOL _rtGravityActive = NO;
-static BOOL _pfGravitationEnabled = YES;
+static BOOL _pfTweakEnabled = YES;
 static BOOL _pfFingerGravityEnabled = YES;
 
-NSDictionary *gravitationPrefs = nil;
+NSDictionary *prefs = nil;
 
 // Toggle
-void toggleGravitationAnimations()
+void toggleAnimations()
 {
-    if (!_rtGravityActive && _pfGravitationEnabled)
+    if (!_rtGravityActive && _pfTweakEnabled)
         [[NSNotificationCenter defaultCenter] postNotificationName:@"GravitationStart" object:nil];
     else
         [[NSNotificationCenter defaultCenter] postNotificationName:@"GravitationStop" object:nil];
@@ -75,16 +82,16 @@ void toggleGravitationAnimations()
 
 - (void)setVisibleColumnRange:(NSRange)range
 {
-    if (self.gravitation_isReadyForMemoryFuck && range.length == 0 && _rtGravityActive && _pfGravitationEnabled)
+    if (self.gravitation_isReadyForMemoryFuck && range.length == 0 && _rtGravityActive && _pfTweakEnabled)
         range.length = self.iconsInRowForSpacingCalculation;
-    if (!_rtGravityActive || !_pfGravitationEnabled)
+    if (!_rtGravityActive || !_pfTweakEnabled)
         %orig(range);
 }
 
 - (NSRange)visibleColumnRange
 {
     NSRange range = %orig;
-    if (self.gravitation_isReadyForMemoryFuck && range.length == 0 && _rtGravityActive && _pfGravitationEnabled)
+    if (self.gravitation_isReadyForMemoryFuck && range.length == 0 && _rtGravityActive && _pfTweakEnabled)
         range.length = self.iconsInRowForSpacingCalculation;
     return range;
 }
@@ -101,7 +108,7 @@ void toggleGravitationAnimations()
 - (void)gravitation_startAnimations
 {
     // 检查主开关是否启用
-    if (!_pfGravitationEnabled) {
+    if (!_pfTweakEnabled) {
         NSLog(@"[Gravitation] Tweak disabled, skipping animation start");
         return;
     }
@@ -197,7 +204,7 @@ void toggleGravitationAnimations()
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     // 检查开关状态和重力效果是否激活
-    if (!_pfFingerGravityEnabled || !_rtGravityActive || !_pfGravitationEnabled) {
+    if (!_pfFingerGravityEnabled || !_rtGravityActive || !_pfTweakEnabled) {
         %orig;
         return;
     }
@@ -226,7 +233,7 @@ void toggleGravitationAnimations()
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
     // 检查开关状态和重力效果是否激活
-    if (!_pfFingerGravityEnabled || !_rtGravityActive || !_pfGravitationEnabled) {
+    if (!_pfFingerGravityEnabled || !_rtGravityActive || !_pfTweakEnabled) {
         %orig;
         return;
     }
@@ -247,7 +254,7 @@ void toggleGravitationAnimations()
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     // 检查开关状态和重力效果是否激活
-    if (!_pfFingerGravityEnabled || !_rtGravityActive || !_pfGravitationEnabled) {
+    if (!_pfFingerGravityEnabled || !_rtGravityActive || !_pfTweakEnabled) {
         %orig;
         return;
     }
@@ -266,7 +273,7 @@ void toggleGravitationAnimations()
 {
     %orig;
     if (event.type == UIEventTypeMotion && event.subtype == UIEventSubtypeMotionShake)
-        toggleGravitationAnimations();
+        toggleAnimations();
 }
 %end
 
@@ -274,41 +281,41 @@ void toggleGravitationAnimations()
 - (BOOL)hidesOffscreenCustomPageViews { return NO; }
 %end
 
-// Gravitation Preferences
-#define kGravitationIdentifier @"com.axs.combinedtweakprefs"
-#define kGravitationSettingsChangedNotification (CFStringRef)@"com.axs.combinedtweakprefs/Prefs"
-#define kGravitationSettingsPath @"/var/jb/var/mobile/Library/Preferences/com.axs.combinedtweakprefs.plist"
+// Preferences
+#define kIdentifier @"com.axs.gravitationprefs"
+#define kSettingsChangedNotification (CFStringRef)@"com.axs.gravitationprefs/Prefs"
+#define kSettingsPath @"/var/jb/var/mobile/Library/Preferences/com.axs.gravitationprefs.plist"
 
-static void *gravitationObserver = NULL;
+static void *observer = NULL;
 
-static void reloadGravitationPrefs()
+static void reloadPrefs()
 {
     if ([NSHomeDirectory() isEqualToString:@"/var/mobile"])
     {
-        CFArrayRef keyList = CFPreferencesCopyKeyList((CFStringRef)kGravitationIdentifier, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+        CFArrayRef keyList = CFPreferencesCopyKeyList((CFStringRef)kIdentifier, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
         if (keyList)
         {
-            gravitationPrefs = (NSDictionary *)CFBridgingRelease(CFPreferencesCopyMultiple(keyList, (CFStringRef)kGravitationIdentifier, kCFPreferencesCurrentUser, kCFPreferencesAnyHost));
-            if (!gravitationPrefs) gravitationPrefs = [NSDictionary new];
+            prefs = (NSDictionary *)CFBridgingRelease(CFPreferencesCopyMultiple(keyList, (CFStringRef)kIdentifier, kCFPreferencesCurrentUser, kCFPreferencesAnyHost));
+            if (!prefs) prefs = [NSDictionary new];
             CFRelease(keyList);
         }
     }
     else
-        gravitationPrefs = [NSDictionary dictionaryWithContentsOfFile:kGravitationSettingsPath];
+        prefs = [NSDictionary dictionaryWithContentsOfFile:kSettingsPath];
 }
 
-static void gravitationPreferencesChanged()
+static void preferencesChanged()
 {
-    CFPreferencesAppSynchronize((CFStringRef)kGravitationIdentifier);
-    reloadGravitationPrefs();
+    CFPreferencesAppSynchronize((CFStringRef)kIdentifier);
+    reloadPrefs();
 
-    NSNumber *gravitationEnabledNum = gravitationPrefs[@"gravitationEnabled"];
-    NSNumber *fingerEnabledNum = gravitationPrefs[@"fingerGravity"];
-    _pfGravitationEnabled = gravitationEnabledNum ? gravitationEnabledNum.boolValue : YES;
+    NSNumber *tweakEnabledNum = prefs[@"tweakEnabled"];
+    NSNumber *fingerEnabledNum = prefs[@"fingerGravity"];
+    _pfTweakEnabled = tweakEnabledNum ? tweakEnabledNum.boolValue : YES;
     _pfFingerGravityEnabled = fingerEnabledNum ? fingerEnabledNum.boolValue : YES;
 
     // 若主开关被关闭且动画正在运行，则立刻停止动画
-    if (!_pfGravitationEnabled && _rtGravityActive)
+    if (!_pfTweakEnabled && _rtGravityActive)
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"GravitationStop" object:nil];
         _rtGravityActive = NO;
@@ -317,9 +324,8 @@ static void gravitationPreferencesChanged()
 
 %ctor
 {
-    gravitationPreferencesChanged();
-    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), &gravitationObserver, (CFNotificationCallback)gravitationPreferencesChanged, (CFStringRef)@"com.axs.combinedtweak/Prefs", NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
+    preferencesChanged();
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), &observer, (CFNotificationCallback)preferencesChanged, (CFStringRef)@"com.axs.gravitation/Prefs", NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
     NSLog(@"[Gravitation] Initialized ✅");
 }
-
 #pragma clang diagnostic pop
