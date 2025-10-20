@@ -24,6 +24,9 @@ jobs:
       - name: Use Theos Setup Action
         uses: axs66/theos-action@main
 
+      - name: Clean Theos cache
+        run: rm -rf .theos
+
       - name: Clean previous packages
         run: rm -f ${{ github.workspace }}/packages/*.deb
 
