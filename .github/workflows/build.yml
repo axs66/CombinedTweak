@@ -1,14 +1,13 @@
 name: CI
 
-# 仅当 build.yml 文件发生变化时触发工作流
 on:
   push:
     paths:
-      - '.github/workflows/build.yml'  # 监控 build.yml 文件的变化
-      - 'Tweak.x'  # 增加对 Tweak.xm 文件的监控
-      - 'control' 
+      - '.github/workflows/build.yml'
+      - 'Tweak.xm'        # 修正：应为 Tweak.xm，而不是 Tweak.x
+      - 'control'
     branches:
-      - 'main'  # 仅在推送到 main 分支时触发
+      - 'main'
   workflow_dispatch:
 
 jobs:
@@ -24,11 +23,16 @@ jobs:
       - name: Use Theos Setup Action
         uses: axs66/theos-action@main
 
-      - name: Clean Theos cache
-        run: rm -rf .theos
+      # ✅ 双重清理防缓存残留
+      - name: Clean Theos cache and previous build
+        run: |
+          make clean || true
+          rm -rf .theos
+          rm -f ${{ github.workspace }}/packages/*.deb
 
-      - name: Clean previous packages
-        run: rm -f ${{ github.workspace }}/packages/*.deb
+      # ✅ 可选：禁用 VLA 警告，防止编译器误报
+      - name: Append extra CFLAGS
+        run: echo 'ADDITIONAL_CFLAGS += -Wno-vla-cxx-extension -Wno-gnu-variable-sized-type-not-at-end' >> Makefile
 
       - name: Build DEB (rootless + roothide)
         run: |
