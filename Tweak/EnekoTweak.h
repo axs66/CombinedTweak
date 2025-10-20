@@ -8,7 +8,6 @@
 #import <substrate.h>
 #import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
-#import "GcUniversal/GcImagePickerUtils.h"
 #import "../Preferences/PreferenceKeys.h"
 #import "../Preferences/NotificationKeys.h"
 

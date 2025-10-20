@@ -7,9 +7,10 @@ include $(THEOS)/makefiles/common.mk
 TWEAK_NAME = CombinedTweak
 
 CombinedTweak_FILES = Tweak/EnekoTweak.m Tweak/GravitationTweak.m
-CombinedTweak_CFLAGS = -fobjc-arc -Wno-deprecated-declarations
+CombinedTweak_CFLAGS = -fobjc-arc -Wno-deprecated-declarations -DTHEOS_LEAN_AND_MEAN
 CombinedTweak_FRAMEWORKS = UIKit Foundation AVFoundation CoreMotion QuartzCore
 CombinedTweak_PRIVATE_FRAMEWORKS = Preferences
+CombinedTweak_LIBRARIES = gcuniversal
 CombinedTweak_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 
 include $(THEOS)/makefiles/tweak.mk

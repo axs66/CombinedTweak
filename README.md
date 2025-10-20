@@ -31,6 +31,35 @@ A combined iOS jailbreak tweak that merges **Eneko** (dynamic wallpapers) and **
 - Jailbroken device
 - libGCUniversal dependency
 
+## Building from Source
+
+### Prerequisites
+- Theos development environment
+- libGCUniversal library
+
+### Installing libGCUniversal
+```bash
+git clone https://github.com/MrGcGamer/LibGcUniversal.git
+cd LibGcUniversal
+make package install
+```
+
+### Building CombinedTweak
+```bash
+cd CombinedTweak
+make clean
+make package
+```
+
+### Troubleshooting Build Issues
+
+If you encounter the error `'GcUniversal/GcImagePickerUtils.h' file not found`:
+
+1. Ensure libGCUniversal is properly installed
+2. Check that the library is linked correctly in the Makefile
+3. The project uses `CombinedTweak_LIBRARIES = gcuniversal` to link the library
+4. No direct header import is needed - the library provides the functionality at runtime
+
 ## Configuration
 
 The tweak provides a unified preferences panel with sections for:

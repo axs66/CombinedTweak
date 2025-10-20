@@ -7,6 +7,11 @@
 
 #import "EnekoTweak.h"
 
+// Forward declaration for GcImagePickerUtils
+@interface GcImagePickerUtils : NSObject
++ (NSURL *)videoURLFromDefaults:(NSString *)defaults withKey:(NSString *)key;
+@end
+
 #pragma mark - Lock screen class hooks
 
 static void (* orig_CSCoverSheetViewController_viewDidLoad)(CSCoverSheetViewController* self, SEL _cmd);

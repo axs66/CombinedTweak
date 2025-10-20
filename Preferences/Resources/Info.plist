@@ -5,20 +5,20 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>gravitationprefs</string>
+	<string>CombinedTweakPreferences</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.axs.gravitationprefs</string>
+	<string>com.axs.combinedtweakprefs</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>CombinedTweakPreferences</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.0</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
 	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
 	<key>NSPrincipalClass</key>
-	<string>GRVRootListController</string>
+	<string>CombinedTweakRootListController</string>
 </dict>
 </plist>
