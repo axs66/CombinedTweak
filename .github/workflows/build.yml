@@ -1,14 +1,16 @@
 name: CI
 
-# 仅当 build.yml 文件发生变化时触发工作流
 on:
   push:
     paths:
-      - '.github/workflows/build.yml'  # 监控 build.yml 文件的变化
-      - 'Tweak.x'  # 增加对 Tweak.xm 文件的监控
-      - 'control' 
+      - '.github/workflows/build.yml'
+      - 'Tweak.xm'  # 修正文件名（应该是 Tweak.xm 而不是 Tweak.x）
+      - 'Tweak.x'    # 保留这个以防万一
+      - 'control'
+      - '**/*.m'     # 添加对源代码文件的监控
+      - '**/*.h'
     branches:
-      - 'main'  # 仅在推送到 main 分支时触发
+      - 'main'
   workflow_dispatch:
 
 jobs:
@@ -24,11 +26,37 @@ jobs:
       - name: Use Theos Setup Action
         uses: axs66/theos-action@main
 
+      - name: Install GcUniversal dependency
+        run: |
+          # 创建必要的目录
+          mkdir -p $THEOS/include/GcUniversal
+          mkdir -p $THEOS/lib
+          
+          # 下载 GcUniversal 头文件
+          cd /tmp
+          git clone https://github.com/0x1306a00/GcUniversal.git
+          cd GcUniversal
+          
+          # 复制头文件到 Theos include 目录
+          cp *.h $THEOS/include/GcUniversal/
+          
+          # 如果需要 lib 文件，也一并复制（如果有的话）
+          if [ -f "libgcuniversal.dylib" ]; then
+            cp libgcuniversal.dylib $THEOS/lib/
+          fi
+          
+          echo "GcUniversal installed successfully"
+
       - name: Clean previous packages
         run: rm -f ${{ github.workspace }}/packages/*.deb
 
       - name: Build DEB (rootless + roothide)
         run: |
+          # 先测试编译是否正常
+          make clean
+          make THEOS_PACKAGE_SCHEME=rootless
+          
+          # 如果编译成功，再打包
           make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=roothide
 
@@ -38,7 +66,13 @@ jobs:
       - name: Create GitHub Release
         run: |
           VERSION=$(date +v%Y%m%d%H%M)
-          gh release create $VERSION ${{ github.workspace }}/packages/*.deb --title "Eneko $VERSION" --notes "自动构建 .deb 安装包"
+          # 检查是否有 deb 文件生成
+          if ls ${{ github.workspace }}/packages/*.deb 1> /dev/null 2>&1; then
+            gh release create $VERSION ${{ github.workspace }}/packages/*.deb --title "Eneko $VERSION" --notes "自动构建 .deb 安装包"
+          else
+            echo "No DEB files found to release"
+            exit 1
+          fi
         env:
           GH_TOKEN: ${{ secrets.PAT }}
 
